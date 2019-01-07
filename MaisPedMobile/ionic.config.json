@@ -1,7 +1,0 @@
-{
-  "name": "MaisPedMobile",
-  "integrations": {
-    "cordova": {}
-  },
-  "type": "angular"
-}

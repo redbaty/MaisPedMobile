@@ -57,13 +57,27 @@ namespace MaisPedMobile.SyncServer.Hubs
     {
         public static ClaimsPrincipal GetClaims(this HttpContext context, string key)
         {
-            if (!context.Request.Headers.ContainsKey("Authorization")) return null;
-            var requestHeader = context.Request.Headers["Authorization"].ToString();
-            if (!requestHeader.StartsWith("Bearer ")) return null;
+            string requestHeader;
+
+            if (!context.Request.Headers.ContainsKey("Authorization"))
+            {
+                if (context.Request.Query.ContainsKey("access_token"))
+                {
+                    requestHeader = context.Request.Query["access_token"];
+                }
+
+                return null;
+            }
+            else
+            {
+                requestHeader = context.Request.Headers["Authorization"].ToString();
+            }
+       
+
+            if (string.IsNullOrEmpty(requestHeader)) return null;
 
             var token = requestHeader.Replace("Bearer ", "");
             var handler = new JwtSecurityTokenHandler();
-
 
             var validations = new TokenValidationParameters
             {
